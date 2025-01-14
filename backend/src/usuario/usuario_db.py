@@ -12,5 +12,5 @@ class UsuarioDb(Model):
 
     class Meta:
         database = db
-        schema = 'usuario'
+        schema = 'public'
         db_table = 'usuario'
