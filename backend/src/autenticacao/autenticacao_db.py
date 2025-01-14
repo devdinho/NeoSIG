@@ -12,7 +12,7 @@ class UsuarioAuthDb(Model):
 
     class Meta:
         database = db
-        schema = 'autenticacao'
+        schema = 'public'
         db_table = 'usuarioauth'
 
 
@@ -27,4 +27,4 @@ class JwtRefreshTokenDb(Model):
 
     class Meta:
         database = db
-        schema = 'autenticacao'
+        schema = 'public'

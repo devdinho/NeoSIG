@@ -1,7 +1,5 @@
-FROM python:3.8.10
-COPY ./src /app/src
-COPY ./requirements.txt /app
-WORKDIR /app
+FROM python:3.13
+COPY . .
 RUN pip3 install -r ./requirements.txt
 EXPOSE 8000
 
