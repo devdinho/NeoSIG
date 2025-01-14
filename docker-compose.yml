@@ -1,0 +1,32 @@
+services:
+  db:
+    container_name: fastapi_postgresql
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=${DB_USUARIO}
+      - POSTGRES_PASSWORD=${DB_SENHA}
+      - POSTGRES_DB = ${DB_NOME}
+    volumes:
+      - ./src/data/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app-network
+  app:
+    container_name: app
+    build: .
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    restart: always
+
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
