@@ -1,6 +1,6 @@
 services:
   db:
-    container_name: fastapi_postgresql
+    container_name: neosig_postgresql
     image: postgres
     restart: always
     ports:
@@ -11,10 +11,8 @@ services:
       - POSTGRES_DB = ${DB_NOME}
     volumes:
       - ./src/data/init.sql:/docker-entrypoint-initdb.d/init.sql
-    networks:
-      - app-network
-  app:
-    container_name: app
+  backend:
+    container_name: neosig_backend
     build:
       context: ./backend
     ports:
@@ -24,10 +22,12 @@ services:
     depends_on:
       - db
     restart: always
+    env_file: ".env"
 
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
+  frontend:
+    container_name: neosig_frontend
+    build:
+      context: ./frontend
+    ports:
+      - 5173:5173
+    env_file: ".env"
