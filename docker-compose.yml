@@ -15,7 +15,8 @@ services:
       - app-network
   app:
     container_name: app
-    build: .
+    build:
+      context: ./backend
     ports:
       - 8000:8000
     volumes:
