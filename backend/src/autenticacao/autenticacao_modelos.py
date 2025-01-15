@@ -19,3 +19,8 @@ class AtualizarJwtModelo(BaseModel):
     status: bool
     erro: Optional[str]
     jwt: Optional[str]
+
+class PostCadastroUsuario(BaseModel):
+    nome: str
+    senha: str
+    email: str
