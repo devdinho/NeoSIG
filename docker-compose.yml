@@ -1,4 +1,10 @@
 services:
+  web:
+    image: nginx:latest
+    container_name: neosig_nginx
+    restart: always
+    ports: "80:80"
+
   db:
     container_name: neosig_postgresql
     image: postgres
@@ -11,8 +17,8 @@ services:
       - POSTGRES_DB = ${DB_NOME}
     volumes:
       - ./src/data/init.sql:/docker-entrypoint-initdb.d/init.sql
-  backend:
-    container_name: neosig_backend
+  backend-fastapi:
+    container_name: neosig_backend_fastapi
     build:
       context: ./backend
     ports:
@@ -23,6 +29,22 @@ services:
       - db
     restart: always
     env_file: ".env"
+
+  backend-php:
+    container_name: neosig_backend_php
+    image: mlalbuquerque/php:7.1
+    build:
+      context: ./backend-php
+      args:
+        - "UID=$UID"
+        - "GID=$GID"
+        - "USER=$USER"
+    volumes:
+      - ".:/var/www/html"
+      - "./dockerfiles/config/php.ini:/usr/local/etc/php/php.ini"
+      - "./dockerfiles/config/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini"
+    environment:
+      PATH: "/root/.composer/vendor/bin:${PATH}"
 
   frontend:
     container_name: neosig_frontend
