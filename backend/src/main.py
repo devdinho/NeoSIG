@@ -13,11 +13,7 @@ Settings()
 
 
 # autenticacao
-# Links uteis
-# Arquivos Sql
-# Downloads Drivers
-# Videos Youtube
-# Notas Versão
+
 db.create_tables([JwtRefreshTokenDb, UsuarioAuthDb, UsuarioDb])
 
 app = FastAPI()

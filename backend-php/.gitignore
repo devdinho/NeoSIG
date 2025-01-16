@@ -1,0 +1,50 @@
+# Diretórios de dependências
+/vendor/
+
+# Arquivos de configuração sensíveis
+.env
+
+# Diretórios e arquivos temporários
+/tmp/
+*.log
+
+# Arquivos de cache do PHP
+/.idea/
+/.cache/
+
+# Diretórios do Composer
+/composer.lock
+
+# Arquivos de backup de editores de código
+*~ 
+*.bak
+*.swp
+
+# Arquivos de configuração do sistema (exemplo para o macOS)
+.DS_Store
+
+# Arquivos de logs do PHP
+*.log
+
+# Arquivos do servidor web (se estiver usando Apache ou Nginx, por exemplo)
+logs/
+*.pid
+*.sock
+
+# Diretórios e arquivos temporários
+/tmp/
+
+# Diretório do banco de dados SQLite (se estiver utilizando SQLite)
+database.sqlite
+
+# Diretórios de cache de framework PHP (caso use um framework como Laravel, Symfony, etc.)
+/storage/
+/bootstrap/cache/
+
+# Diretórios de testes (se tiver algum diretório de testes temporários)
+tests/_output/
+tests/_cache/
+
+# Arquivos gerados automaticamente durante o desenvolvimento
+phpunit.xml
+phpunit.xml.dist
