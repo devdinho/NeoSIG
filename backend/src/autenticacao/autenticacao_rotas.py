@@ -32,7 +32,6 @@ def cadastrar(usuario: PostCadastroUsuario):
     Returns:
         CadastroModelo: Modelo indicando sucesso ou erro do cadastro.
     """
-    # Validações básicas de entrada
     usuario.verificar_nome()
     usuario.verificar_email()
     usuario.verificar_senha()
@@ -42,10 +41,8 @@ def cadastrar(usuario: PostCadastroUsuario):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail='Email já cadastrado')
 
-    # Gera o hash da senha
     senha_hash = gerar_hash_sha256(usuario.senha)
 
-    # Cria e salva o usuário na base de dados
     usuario_auth = UsuarioAuthDb(
         nome=usuario.nome,
         email=usuario.email,
@@ -55,7 +52,6 @@ def cadastrar(usuario: PostCadastroUsuario):
     )
     usuario_auth.save()
 
-    # Adiciona o usuário na tabela auxiliar
     UsuarioDb.insert(id=usuario_auth.id, cor='#fff').execute()
 
     return CadastroModelo(status=True)
@@ -75,7 +71,6 @@ def entrar(form_data: OAuth2PasswordRequestForm = Depends()):
     email = form_data.username
     password = form_data.password
 
-    # Busca o usuário pelo email
     usuario_query = UsuarioAuthDb.select().where(UsuarioAuthDb.email == email)
     if not usuario_query.exists():
         raise HTTPException(
@@ -83,7 +78,6 @@ def entrar(form_data: OAuth2PasswordRequestForm = Depends()):
 
     usuario = usuario_query.first()
 
-    # Verifica se a senha está correta
     senha_hash = gerar_hash_sha256(password)
     if senha_hash != usuario.senha_hash:
         raise HTTPException(
@@ -98,7 +92,6 @@ def entrar(form_data: OAuth2PasswordRequestForm = Depends()):
     usuario_payload['exp'] = datetime.datetime.now(
     ) + datetime.timedelta(seconds=settings.tempo_expiracao_jwt)
 
-    # Gera e insere o token de refresh no banco de dados
     usuario_payload['jwt_refresh_id'] = JwtRefreshTokenDb.insert(
         emitido_em=datetime.datetime.now(),
         expira_em=usuario_payload['exp'],
@@ -107,7 +100,6 @@ def entrar(form_data: OAuth2PasswordRequestForm = Depends()):
         usuario_id=usuario.id
     ).execute()
 
-    # Formata datas para string ISO
     for chave_datetime in ['registrado_em', 'ultimo_acesso_em']:
         usuario_payload[chave_datetime] = usuario_payload[chave_datetime].isoformat()
 
@@ -118,7 +110,6 @@ def entrar(form_data: OAuth2PasswordRequestForm = Depends()):
     enc_jwt = jwt.encode(payload=usuario_payload,
                          key=settings.jwt_secret, algorithm='HS256')
 
-    # Atualiza o último acesso do usuário
     usuario.ultimo_acesso_em = datetime.datetime.now()
     usuario.save()
 
