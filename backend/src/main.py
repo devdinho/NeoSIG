@@ -7,14 +7,15 @@ from fastapi import FastAPI, Depends, BackgroundTasks
 from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 from config import Settings
-
 from usuario.usuario_db import UsuarioDb
+from geolocalizacao import geolocalizacao_rotas
+from geolocalizacao.geolocalizacao_db import GeoLocalizacaoDb
 Settings()
 
 
 # autenticacao
 
-db.create_tables([JwtRefreshTokenDb, UsuarioAuthDb, UsuarioDb])
+db.create_tables([JwtRefreshTokenDb, UsuarioAuthDb, UsuarioDb, GeoLocalizacaoDb])
 
 app = FastAPI()
 app.add_middleware(GZipMiddleware, minimum_size=100)
@@ -25,6 +26,8 @@ app.add_middleware(CORSMiddleware,
                    allow_headers=["*"])
 
 app.include_router(autenticacao_rotas.router)
+app.include_router(autenticacao_rotas.router)
+app.include_router(geolocalizacao_rotas.router)
 
 
 @app.get("/")
